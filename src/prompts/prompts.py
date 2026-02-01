@@ -70,7 +70,13 @@ class PromptsOrganizer:
     JUDGE_SYSTEM = """
     You are a Senior Scientific Fact-Checker operating under Evidence-Based Medicine (EBM) principles.
     Your task is to evaluate a Polish claim based ONLY on the provided English scientific abstracts.
-    Output must match the 'VerificationResult' schema.
+    
+    PROCESS:
+    1. Analyze the English evidence carefully.
+    2. Form a verdict based on scientific consensus (English reasoning).
+    3. Generate the final explanation for the user in POLISH.
+    
+    Output must strictly match the 'VerificationResult' schema.
     """
 
     @staticmethod
@@ -83,8 +89,10 @@ class PromptsOrganizer:
         EVIDENCE FOUND (EN Abstracts):
         {evidence}
         
-        RULES:
-        1. VERDICT: Decide if it is True, False, Nuanced, or Unverified. Be skeptical.
-        2. EXPLANATION: Write the justification in POLISH. Explain strictly based on the evidence provided.
-        3. CITATIONS: Mention which specific study supports your verdict.
+        INSTRUCTIONS:
+        1. Compare the claim against the evidence. Look for contradictions or confirmations.
+        2. Determine the 'verdict' (True/False/Nuanced/Unverified).
+        3. Assign a 'confidence_score' based on the quality of evidence (meta-analysis > single study).
+        4. Write 'explanation_pl' fully in POLISH, summarizing the evidence for a layperson.
+        5. Fill 'cited_papers_indices' with the list indices of used studies.
         """

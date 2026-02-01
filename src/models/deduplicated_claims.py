@@ -8,6 +8,3 @@ class UniqueClaimsList(BaseModel):
     unique_claims: list[Claim] | None = Field(
         description="Lista unikalnych tez po usunięciu duplikatów. Jeśli teza A i B mówią to samo, połącz je w jedną, lepiej sformułowaną."
     )
-    summary_of_video: str = Field(
-        description="Jednozdaniowe podsumowanie, o czym był cały materiał (dla kontekstu)."
-    )

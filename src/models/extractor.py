@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field
 from .claim import Claim
-
+class ExtractorInput(BaseModel):
+    current_chunk_text: str
+    
 class ExtractorResult(BaseModel):
     found_claims: list[Claim] | None = Field(
         description="Lista wszystkich tez medycznych/naukowych znalezionych w tym fragmencie tekstu. Jeśli nic nie ma, zwróć pustą listę."
