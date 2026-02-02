@@ -17,8 +17,9 @@ class Settings(BaseSettings):
     TEMPERATURE: float = 0.0
     CHUNK_SIZE: int = 10000 
     CHUNK_OVERLAP: int = 500
-    PUBMED_API_KEY: str | None = None
+    PUBMED_API_KEY: str = Field(default="")
     PUBMED_EMAIL: str = Field(default="unknown@example.com")
+    TAVILY_API_KEY: str = Field(default="")
     class Config:
         env_file = ".env"
         
@@ -61,7 +62,6 @@ class LLMFactory:
     @staticmethod
     @lru_cache(maxsize=1)
     def get_encoder():
-        """Zwraca encoder do semantic-router (HuggingFace/Local)"""
         settings = get_settings()
         return HuggingFaceEncoder(name=settings.EMBEDDING_MODEL)
 
