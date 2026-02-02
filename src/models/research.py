@@ -7,7 +7,7 @@ class ResearchInput(BaseModel):
     
 class ResearchQuery(BaseModel):
     search_query: str = Field(
-        description="Precise scientific search query in English. Translate Polish concepts into English medical terminology (MeSH terms if possible)."
+        description="Precise scientific search query in English using medical terminology (MeSH terms if possible)."
     )
     
 
@@ -22,4 +22,4 @@ class ResearchState(BaseModel):
 
     found_papers: list[ScientificPaper] = Field(default_factory=list)
     
-    final_verdict: VerificationResult | None = None
+    final_verdicts: list[VerificationResult] = Field(default_factory=list)

@@ -10,7 +10,7 @@ class AgentState(BaseModel):
     Global state handler
     """
     
-    video_url: str = Field(description="Link do filmu YouTube (od usera)")
+    video_url: str = Field(description="YouTube video link (from user)")
     
     transcript_chunks: list[str] | None = Field(default=None) 
     
@@ -18,4 +18,9 @@ class AgentState(BaseModel):
     
     unique_claims: list[Claim] = Field(default_factory=list)
     
+    gatekeeper_verdict: str = "unknown"
+    
     final_verdicts: Annotated[list[VerificationResult], operator.add] = Field(default_factory=list)
+
+    final_report: str = Field(default="")
+    

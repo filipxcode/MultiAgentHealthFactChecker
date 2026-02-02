@@ -1,12 +1,14 @@
 from pydantic import BaseModel, Field
 from .claim import Claim
 class ExtractorInput(BaseModel):
+    """Single input for extract agent"""
     current_chunk_text: str
     
 class ExtractorResult(BaseModel):
+    """Output for extract agent"""
     found_claims: list[Claim] | None = Field(
-        description="Lista wszystkich tez medycznych/naukowych znalezionych w tym fragmencie tekstu. Jeśli nic nie ma, zwróć pustą listę."
+        description="List of all medical/scientific claims found in this text chunk. If none found, return an empty list."
     )
     has_medical_content: bool = Field(
-        description="Flaga pomocnicza. True, jeśli we fragmencie w ogóle padły jakieś stwierdzenia medyczne."
+        description="Helper flag. True if any medical statements were made in the chunk."
     )

@@ -12,11 +12,11 @@ class VerificationResult(BaseModel):
         description="Confidence score (0-100). High (80-100) for meta-analyses/RCTs, Low (0-40) for observational studies or lack of direct evidence."
     )
     
-    explanation_pl: str = Field(
-        description="Krótkie, przystępne uzasadnienie werdyktu w języku POLSKIM. Opisz, co mówią badania i dlaczego ocena jest taka, a nie inna."
+    explanation: str = Field(
+        description="Short, accessible justification of the verdict in ENGLISH. Describe what the studies say and why the assessment is what it is."
     )
     
     sources: list[str] = Field(
         default_factory=list,
-        description="Lista linków do źródeł naukowych użytych w weryfikacji."
+        description="List of links to scientific sources used in verification."
     )

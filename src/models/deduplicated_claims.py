@@ -6,5 +6,5 @@ class UniqueClaimsList(BaseModel):
     Final deduplicated list of claims
     """
     unique_claims: list[Claim] | None = Field(
-        description="Lista unikalnych tez po usunięciu duplikatów. Jeśli teza A i B mówią to samo, połącz je w jedną, lepiej sformułowaną."
+        description="List of unique claims after duplicate removal. If claim A and B say the same thing, merge them into one, better formulated claim."
     )

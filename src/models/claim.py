@@ -6,11 +6,11 @@ class Claim(BaseModel):
     Single claim found in text
     """
     topic: str = Field(
-        description="Krótka kategoria tematyczna, np. 'Suplementacja', 'Sen', 'Dieta'. Pomaga w grupowaniu."
+        description="Short thematic category, e.g., 'Supplementation', 'Sleep', 'Diet'. Helps in grouping."
     )
     statement: str = Field(
-        description="Treść tezy w formie zdania oznajmującego. Np. 'Witamina C skraca czas trwania przeziębienia'. Musi być konkretna i weryfikowalna."
+        description="Content of the claim in a declarative sentence. E.g., 'Vitamin C shortens cold duration'. Must be specific and verifiable."
     )
     quote_verbatim: str = Field(
-        description="Dokładny cytat z transkrypcji, który potwierdza, że autor to powiedział."
+        description="Exact quote from the transcript confirming the author said this."
     )
