@@ -9,6 +9,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 def judge_node(state: ResearchState):
+    """Judge node, used for taking claims and sources from single sub-state and converting it to coherent content"""
     papers = state.found_papers
     claim = state.claim.statement
     logger.info(f"Judging claim: {claim[:50]}... with {len(papers or [])} papers")

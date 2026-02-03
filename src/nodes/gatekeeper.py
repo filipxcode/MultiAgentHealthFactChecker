@@ -4,6 +4,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+#Router settings
 medical_route = Route(
     name="medical",
     score_threshold=0.4,
@@ -76,6 +77,7 @@ def get_cached_router():
     return LLMFactory.get_semantic_router(routes=[medical_route])
 
 def gatekeeper_node(state):
+    """Node handling state after ingesting. Handling whole text lookup and looking for semantic match to the medical topic"""
     if isinstance(state, dict):
         list_transcripted_chunks = state.get("transcript_chunks", [])
     else:
@@ -101,5 +103,5 @@ def gatekeeper_node(state):
             if decision.name == "medical":
                 logger.info(f"Gatekeeper: Found relevant medical content. ({decision.similarity_score:.2f})")
                 return {"gatekeeper_verdict": "pass"}
-            
+    logger.info(f"Gatekeeper: REJECT")
     return {"gatekeeper_verdict": "reject"}

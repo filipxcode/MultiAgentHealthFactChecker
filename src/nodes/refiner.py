@@ -8,23 +8,23 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def deduplicator_node(state: AgentState):
-    """Deduplicator agent node, reducing raw claims to unique set"""
+def refiner_node(state: AgentState):
+    """Refiner agent node, reducing raw claims to unique set, and giving a API flag for future tool usage"""
     
     logger.info(f"Deduplicator received {len(state.raw_claims)} raw claims")
     
     #HARD LIMIT FOR TESTS
-    claims_limited = state.raw_claims[:5]
+    #claims_limited = state.raw_claims[:5]
     
-    claims_processed = ",".join([f"{i} Claim: {c}\n" for i, c in enumerate(claims_limited)])
+    claims_processed = ",".join([f"{i} Claim: {c}\n" for i, c in enumerate(state.raw_claims)])
     
     llm = get_llm("local")
     
     structured_llm = llm.with_structured_output(UniqueClaimsList)
     
     messages = [
-        SystemMessage(content=PromptsOrganizer.DEDUPLICATOR_SYSTEM),
-        HumanMessage(content=PromptsOrganizer.deduplicate_user(claims_processed))
+        SystemMessage(content=PromptsOrganizer.REFINER_SYSTEM),
+        HumanMessage(content=PromptsOrganizer.refiner_user(claims_processed))
     ]
     
     try:

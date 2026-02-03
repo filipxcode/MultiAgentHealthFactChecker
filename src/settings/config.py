@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     MODEL_SMART: str = "llama-3.3-70b-versatile"
     MODEL_LOCAL: str = "llama3.1"
     EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-    EMBEDDING_CHUNK_SIZE: int = 1000
+    EMBEDDING_CHUNK_SIZE: int = 350
     TEMPERATURE: float = 0.0
     CHUNK_SIZE: int = 10000 
     CHUNK_OVERLAP: int = 500

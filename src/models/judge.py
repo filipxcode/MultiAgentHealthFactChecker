@@ -1,9 +1,12 @@
 from pydantic import BaseModel, Field
 from typing import Literal
-
+from ..models.claim import Claim
 class VerificationResult(BaseModel):
     """
+    Judge result for following claim
     """
+    claim: Claim
+    
     verdict: Literal["True", "False", "Unverified", "Nuanced"] = Field(
         description="Categorical assessment: True (confirmed), False (debunked), Unverified (no enough evidence), Nuanced (partially true/context dependent)."
     )

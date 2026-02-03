@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 from .claim import Claim  #
 from .judge import VerificationResult
-
+from .deduplicated_claims import UniqueClaim
 class AgentState(BaseModel):
     """
     Global state handler
@@ -16,7 +16,7 @@ class AgentState(BaseModel):
     
     raw_claims: Annotated[list[Claim], operator.add] = Field(default_factory=list)
     
-    unique_claims: list[Claim] = Field(default_factory=list)
+    unique_claims: list[UniqueClaim] = Field(default_factory=list)
     
     gatekeeper_verdict: str = "unknown"
     

@@ -1,13 +1,15 @@
 from pydantic import Field, BaseModel
-from ..models.claim import Claim
 from ..models.judge import VerificationResult
+from ..models.deduplicated_claims import UniqueClaim
 
 class ResearchInput(BaseModel):
-    single_claim: Claim
-    
+    """Helper input for single claim to research"""
+    single_claim: UniqueClaim
+
 class ResearchQuery(BaseModel):
+    """LLM research structured query"""
     search_query: str = Field(
-        description="Precise scientific search query in English using medical terminology (MeSH terms if possible)."
+        description="The final optimized keyword string ready for search engine."
     )
     
 
@@ -18,7 +20,8 @@ class ScientificPaper(BaseModel):
     
 
 class ResearchState(BaseModel):
-    claim: Claim
+    """Single research state for each subgraph"""
+    claim: UniqueClaim
 
     found_papers: list[ScientificPaper] = Field(default_factory=list)
     
