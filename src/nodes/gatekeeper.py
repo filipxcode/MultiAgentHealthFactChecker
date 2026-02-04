@@ -84,7 +84,7 @@ def gatekeeper_node(state):
         list_transcripted_chunks = getattr(state, "transcript_chunks", [])
     
     settings = get_settings()
-    chunk_size = settings.EMBEDDING_CHUNK_SIZE
+    chunk_size = settings.EMBEDDING_CHUNK_SIZE_ROUTER
     
     router = get_cached_router()
 

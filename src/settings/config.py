@@ -12,14 +12,15 @@ class Settings(BaseSettings):
     MODEL_FAST: str = "llama-3.1-8b-instant"
     MODEL_SMART: str = "llama-3.3-70b-versatile"
     MODEL_LOCAL: str = "llama3.1"
-    EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-    EMBEDDING_CHUNK_SIZE: int = 350
+    EMBEDDING_MODEL_ROUTER: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    EMBEDDING_CHUNK_SIZE_ROUTER: int = 350
     TEMPERATURE: float = 0.0
     CHUNK_SIZE: int = 10000 
     CHUNK_OVERLAP: int = 500
     PUBMED_API_KEY: str = Field(default="")
     PUBMED_EMAIL: str = Field(default="unknown@example.com")
     TAVILY_API_KEY: str = Field(default="")
+    EMBEDDING_MODEL_CLUSTERING: str = "sentence-transformers/all-mpnet-base-v2"
     class Config:
         env_file = ".env"
         
@@ -61,18 +62,18 @@ class LLMFactory:
 
     @staticmethod
     @lru_cache(maxsize=1)
-    def get_encoder():
+    def get_router_encoder():
         settings = get_settings()
-        return HuggingFaceEncoder(name=settings.EMBEDDING_MODEL)
+        return HuggingFaceEncoder(name=settings.EMBEDDING_MODEL_ROUTER)
 
     @staticmethod
     def get_semantic_router(routes: list):
         """Builds and returns a SemanticRouter instance (No caching here due to unhashable routes)"""
-        sr = SemanticRouter(encoder=LLMFactory.get_encoder()) 
+        sr = SemanticRouter(encoder=LLMFactory.get_router_encoder()) 
         if routes:
             sr.add(routes) 
         return sr
-
+    
 def get_llm(type: str = "local"):
     if type == "smart":
         return LLMFactory.get_smart_llm()
