@@ -4,6 +4,7 @@ from ..models.agent_state import AgentState
 from ..models.deduplicated_claims import UniqueClaimsList
 from ..settings.config import get_llm
 from ..prompts.prompts import PromptsOrganizer
+from ..tools.clustering import cluster_claims
 import logging
 
 logger = logging.getLogger(__name__)
@@ -13,32 +14,34 @@ def refiner_node(state: AgentState):
     
     logger.info(f"Deduplicator received {len(state.raw_claims)} raw claims")
     
-    #HARD LIMIT FOR TESTS
-    #claims_limited = state.raw_claims[:5]
+    if not state.raw_claims:
+        logger.warning("Refiner received empty list of claims. Skipping.")
+        return {"unique_claims": []}
     
-    claims_processed = ",".join([f"{i} Claim: {c}\n" for i, c in enumerate(state.raw_claims)])
-    
-    llm = get_llm("local")
-    
-    structured_llm = llm.with_structured_output(UniqueClaimsList)
-    
-    messages = [
-        SystemMessage(content=PromptsOrganizer.REFINER_SYSTEM),
-        HumanMessage(content=PromptsOrganizer.refiner_user(claims_processed))
-    ]
-    
-    try:
-        response = structured_llm.invoke(messages)
-        
-        if isinstance(response, UniqueClaimsList):
-            final_claims = response.unique_claims or []
-        else:
-            final_claims = []
-            
-        logger.info(f"Deduplicator finished. Reduced to {len(final_claims)} unique claims")
-        logger.info(f"\n\n{final_claims}\n\n")
-        return {"unique_claims": final_claims}
+    claims_statements = [c.statement for c in state.raw_claims]
+    claims_batches = cluster_claims(claims_statements)
 
-    except Exception as e:
-        logger.error(f"Error in deduplicator_node: {e}")
-        return {"unique_claims": []} 
+    llm = get_llm("local")
+    structured_llm = llm.with_structured_output(UniqueClaimsList) # type: ignore
+    all_unique_claims = []
+    for i, batch in enumerate(claims_batches):
+        try:
+            claims_processed = "".join([f"{i} Claim: {c}\n" for i, c in enumerate(batch)])
+            messages = [
+                SystemMessage(content=PromptsOrganizer.REFINER_SYSTEM),
+                HumanMessage(content=PromptsOrganizer.refiner_user(claims_processed))
+            ]
+            response = structured_llm.invoke(messages)
+            
+            if isinstance(response, UniqueClaimsList):
+                all_unique_claims.extend(response.unique_claims) #type:ignore
+                logger.info(f"Batch {i+1}/{len(claims_batches)} processed. Found {len(response.unique_claims)} unique items.") #type:ignore
+            else:
+                logger.warning(f"Batch {i+1} returned empty or invalid response.")
+                
+        except Exception as e:
+            logger.error(f"Error in refiner_node: {e}")
+            continue
+    logger.info(f"Refiner finished. Reduced to {len(all_unique_claims)} unique claims")
+    logger.info(f"\n\n{all_unique_claims}\n\n")
+    return {"unique_claims": all_unique_claims}

@@ -6,6 +6,8 @@ from langchain_ollama import ChatOllama
 from pydantic import SecretStr
 from semantic_router.encoders import HuggingFaceEncoder
 from semantic_router import SemanticRouter 
+from sentence_transformers import SentenceTransformer
+from sklearn.cluster import AgglomerativeClustering
 
 class Settings(BaseSettings):
     GROQ_API_KEY: str = Field(default="")
@@ -21,6 +23,11 @@ class Settings(BaseSettings):
     PUBMED_EMAIL: str = Field(default="unknown@example.com")
     TAVILY_API_KEY: str = Field(default="")
     EMBEDDING_MODEL_CLUSTERING: str = "sentence-transformers/all-mpnet-base-v2"
+    CLUSTERING_DISTANCE_THRESHOLD: float = 0.75
+    CLUSTERING_LINKAGE: str = "average"
+    CLUSTERING_METRIC: str = "cosine"
+    CLUSTERING_MIN_CLAIMS: int = 15
+    MAX_BATCH_SIZE: int = 25
     class Config:
         env_file = ".env"
         
@@ -34,10 +41,14 @@ class LLMFactory:
     def get_smart_llm(temperature: float = 0.0):
         settings = get_settings()
         
-        return ChatGroq(
+        base_llm = ChatGroq(
             model=settings.MODEL_SMART,
             api_key=SecretStr(settings.GROQ_API_KEY),
             temperature=temperature
+        )
+        return base_llm.with_retry(
+            stop_after_attempt=3,
+            wait_exponential_jitter=True
         )
 
     @staticmethod
@@ -45,10 +56,14 @@ class LLMFactory:
     def get_fast_llm(temperature: float = 0.0):
         settings = get_settings()
         
-        return ChatGroq(
+        base_llm = ChatGroq(
             model=settings.MODEL_FAST,
             api_key=SecretStr(settings.GROQ_API_KEY),
             temperature=temperature
+        )
+        return base_llm.with_retry(
+            stop_after_attempt=3,
+            wait_exponential_jitter=True
         )
 
     @staticmethod
@@ -59,6 +74,7 @@ class LLMFactory:
             model=settings.MODEL_LOCAL,
             temperature=temperature
         )
+
 
     @staticmethod
     @lru_cache(maxsize=1)
@@ -73,6 +89,23 @@ class LLMFactory:
         if routes:
             sr.add(routes) 
         return sr
+    
+    @staticmethod
+    @lru_cache(maxsize=1)
+    def get_cluster_encoder():
+        settings = get_settings()
+        return SentenceTransformer(settings.EMBEDDING_MODEL_CLUSTERING)
+    
+    @staticmethod
+    def get_clustering_model():
+        """Returns a configured AgglomerativeClustering instance. NOT CACHED as it holds state after fitting."""
+        settings = get_settings()
+        return AgglomerativeClustering(
+            n_clusters=None, 
+            distance_threshold=settings.CLUSTERING_DISTANCE_THRESHOLD, 
+            metric=settings.CLUSTERING_METRIC, 
+            linkage=settings.CLUSTERING_LINKAGE #type: ignore
+        )
     
 def get_llm(type: str = "local"):
     if type == "smart":

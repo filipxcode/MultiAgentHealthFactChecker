@@ -1,12 +1,11 @@
 from pydantic import BaseModel, Field
 from typing import Literal
-from ..models.claim import Claim
-class VerificationResult(BaseModel):
+from ..models.deduplicated_claims import UniqueClaim
+
+class JudgeOutput(BaseModel):
     """
-    Judge result for following claim
+    Structure for the LLM output (without the Claim object).
     """
-    claim: Claim
-    
     verdict: Literal["True", "False", "Unverified", "Nuanced"] = Field(
         description="Categorical assessment: True (confirmed), False (debunked), Unverified (no enough evidence), Nuanced (partially true/context dependent)."
     )
@@ -18,6 +17,12 @@ class VerificationResult(BaseModel):
     explanation: str = Field(
         description="Short, accessible justification of the verdict in ENGLISH. Describe what the studies say and why the assessment is what it is."
     )
+
+class VerificationResult(JudgeOutput):
+    """
+    Final result including the Claim object (for internal use).
+    """
+    claim: UniqueClaim
     
     sources: list[str] = Field(
         default_factory=list,

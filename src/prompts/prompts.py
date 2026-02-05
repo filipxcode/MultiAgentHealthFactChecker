@@ -60,7 +60,7 @@ class PromptsOrganizer:
     You have TWO simultaneous goals:
     1. CONSOLIDATION: Merge similar claims into single, strong scientific statements. Remove noise/opinions.
     2. ROUTING: Assign the best verification tool (PUBMED vs TAVILY) for each unique claim.
-    
+    3. CLASSIFICATION: Be sure that every claim as accurate and precise 'topic' (e.g., "Homeopathy", "Nutrition", "Cardiology").
     Return data consistent with the "RefinementResult" class.
     """
     
@@ -77,8 +77,9 @@ class PromptsOrganizer:
         STEP 1: DEDUPLICATE & FILTER
         - Merge claims saying the same thing (e.g., "Vitamin C helps flu" + "Ascorbic acid for cold" -> One claim).
         - Discard trivial facts, subjective opinions, or non-verifiable statements.
-        - Keep the list concise (target 5-10 high-value claims).
-
+        - Keep claims concise (ideally 15-25 words).
+        - Be precise, if there are 3 distinct facts, return 3. If there are 15, return 15.
+        
         STEP 2: ASSIGN TOOL (Strategy)
         For each final unique claim, assign one verification tool:
         - **"PUBMED"**: Use ONLY for strict hard science: molecules, biochemistry, anatomy, diseases, clinical trials, specific drugs.
@@ -134,10 +135,13 @@ class PromptsOrganizer:
     """
 
     @staticmethod
-    def judge_user(claim: str, evidence: str) -> str:
+    def judge_user(claim: str, evidence: str, topic: str) -> str:
         return f"""
         Act as an impartial judge. Evaluate the claim using the provided abstracts.
-
+        TOPIC:
+        "{topic}"
+        (Use this topic to resolve ambiguities. Do not confuse general medical facts with specific claims about "{topic}")
+        
         CLAIM TO JUDGE: 
         "{claim}"
         
