@@ -1,4 +1,3 @@
-
 # MultiAgentSystem — YouTube Medical Fact-Checker 🩺🔍
 
 **Automated fact-checking of medical content from YouTube videos using LangGraph & LangServe.**
@@ -37,7 +36,7 @@ The main graph (global state: `AgentState`) executes the following nodes:
 
 ### Workflow Visualization
 
-![Schema](https://raw.githubusercontent.com/filipxcode/MultiAgentHealthFactChecker/main/assets/schema.png)
+![Schema](https://github.com/filipxcode/MultiAgentHealthFactChecker/blob/main/assets/schema.png?raw=true)
 
 ### Key Data Models
 
@@ -98,7 +97,7 @@ TAVILY_API_KEY=your_tavily_key_here
 LANGSMITH_API_KEY=your_langsmith_key
 LANGCHAIN_TRACING_V2=true
 LANGCHAIN_PROJECT=youtube-fact-checker
-```
+``` 
 
 
 ## 💻 Usage
@@ -137,7 +136,6 @@ streamlit run src/gui/gui.py
 * **Proxy**: By default, the code assumes a **Webshare** proxy configuration.
 * *Don't have a proxy?* Set `web_proxy=False` inside `src/nodes/ingest.py`.
 * *Have a proxy?* Ensure you configure it or place a `cookies.txt` file in the root if you hit rate limits.
-
 
 
 ### Verification Strategy
