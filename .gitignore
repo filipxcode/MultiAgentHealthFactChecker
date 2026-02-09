@@ -2,5 +2,5 @@ venv
 .vscode
 .env
 __pycache__
-*.txt
+cookies.txt
 notebooks/*
