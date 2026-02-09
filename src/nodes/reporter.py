@@ -13,8 +13,7 @@ def reporter_node(state: AgentState):
     report = "# Fact-Check Report\n\n"
     
     total = len(verdicts)
-    fake_count = sum(1 for v in verdicts if v.verdict.lower() == "false")
-    report += f"Analyzed claims: **{total}**. Debunked: **{fake_count}**.\n\n"
+    report += f"Analyzed claims: **{total}**.\n\n"
     report += "---\n\n"
     
     for i, v in enumerate(verdicts):

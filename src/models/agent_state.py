@@ -24,3 +24,4 @@ class AgentState(BaseModel):
 
     final_report: str = Field(default="")
     
+    errors: str | None = Field(default=None) 

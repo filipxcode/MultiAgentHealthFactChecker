@@ -65,8 +65,21 @@ medical_route = Route(
         "breakdown of recent clinical trials",
         "peer-reviewed studies on cancer treatment",
         "meta-analysis of nutritional data",
-        "debunking medical myths with science",
         "understanding statistical significance in studies"
+        
+        #--- 8. Myths and fakes 
+        "debunking common medical myths and misconceptions",
+        "why vaccines do not cause autism",
+        "truth about detox teas and cleanses",
+        "scientific fact checking of health claims",
+        "is msg actually bad for your health",
+        "misconceptions about drinking water requirements",
+        "doctors reacting to tiktok health trends",
+        "separating pseudoscience from evidence based medicine",
+        "dangers of alternative medicine and homeopathy",
+        "lies about weight loss and metabolism",
+        "correcting false health information",
+        "analyzing fake medical news"
     ],
 )
 

@@ -5,7 +5,6 @@ class UniqueClaim(BaseModel):
     topic: str = Field(description="Short topic, e.g. 'Cardiology'")
     statement: str = Field(description="The refined, scientific statement.")
     quote_verbatim: str = Field(description="Original quote (or merged quotes).")
-    
     verification_tool: Literal["PUBMED", "TAVILY"] = Field(
         description="The tool assigned to verify this claim."
     )

@@ -48,8 +48,8 @@ class PromptsOrganizer:
         
         Input: "Vitamin C supplementation reduces cortisol levels in stressed individuals."
         Output: {{ "topic": "Nutrition", "statement": "Vitamin C supplementation significantly reduces cortisol levels in individuals under stress.", "quote_verbatim": "..." }}
-
-        Translate the 'statement' field to English, even if the source text is Polish.
+        
+        Translate the 'statement' field to English, even if the source text is in other language.
         """
         
     # DEDUPLICATOR AGENT (Reduce)
@@ -78,7 +78,7 @@ class PromptsOrganizer:
         - Merge claims saying the same thing (e.g., "Vitamin C helps flu" + "Ascorbic acid for cold" -> One claim).
         - Discard trivial facts, subjective opinions, or non-verifiable statements.
         - Keep claims concise (ideally 15-25 words).
-        - Be precise, if there are 3 distinct facts, return 3. If there are 15, return 15.
+        - If the video PROMOTES medical myths (e.g., claims vaccines cause autism), REJECT it.
         
         STEP 2: ASSIGN TOOL (Strategy)
         For each final unique claim, assign one verification tool:

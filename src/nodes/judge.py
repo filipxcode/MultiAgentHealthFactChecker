@@ -24,7 +24,7 @@ def judge_node(state: ResearchState):
         SystemMessage(content=PromptsOrganizer.JUDGE_SYSTEM),
         HumanMessage(content=PromptsOrganizer.judge_user(claim=claim_text, evidence=evidence_text, topic=state.claim.topic))
     ]
-    llm = get_llm("local")
+    llm = get_llm("fast")
     llm_structured = llm.with_structured_output(JudgeOutput) #type:ignore
     
     try:

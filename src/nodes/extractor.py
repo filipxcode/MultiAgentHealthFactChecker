@@ -16,9 +16,9 @@ def extractor_node(state: ExtractorInput):
         
     logger.info(f"Extractor processing chunk of length {len(chunk)}")
     
-    llm = get_llm("local")
+    llm = get_llm("fast")
     
-    structured_llm = llm.with_structured_output(ExtractorResult)
+    structured_llm = llm.with_structured_output(ExtractorResult) #type:ignore
     
     messages = [
         SystemMessage(content=PromptsOrganizer.EXTRACTOR_SYSTEM),

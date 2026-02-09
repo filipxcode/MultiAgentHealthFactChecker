@@ -32,7 +32,11 @@ class Workflow:
         graph.add_node("subgraph", self.builed_subgraph)
         graph.add_node("reporter", reporter_node)
         graph.set_entry_point("ingest")
-        graph.add_edge("ingest", "gatekeeper")
+        graph.add_conditional_edges(
+            "ingest",
+            self._route_ingest_fallback,
+            ["gatekeeper", END]
+        )
         graph.add_conditional_edges(
             "gatekeeper",
             self._route_gatekeeper,
@@ -88,6 +92,14 @@ class Workflow:
         else:
             return END
 
+    def _route_ingest_fallback(self, state):
+        """Error handler after ingest node, returns END if error occures"""
+        errors = state.errors
+        if errors:
+            return END
+        else:
+            return "gatekeeper"
+    
     def run(self, video_url: str):
         """Program run func"""
         logger.info(f"Starting workflow run for url: {video_url}")

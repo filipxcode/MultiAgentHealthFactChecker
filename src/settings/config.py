@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 from pydantic import Field
 from langchain_groq import ChatGroq
@@ -28,8 +28,11 @@ class Settings(BaseSettings):
     CLUSTERING_METRIC: str = "cosine"
     CLUSTERING_MIN_CLAIMS: int = 15
     MAX_BATCH_SIZE: int = 25
-    class Config:
-        env_file = ".env"
+    MAX_VIDEO_DURATION_SEC: int = 3600
+    model_config = SettingsConfigDict(
+        env_file=".env", 
+        extra="ignore" 
+    )
         
 @lru_cache()
 def get_settings() -> Settings:
@@ -44,12 +47,10 @@ class LLMFactory:
         base_llm = ChatGroq(
             model=settings.MODEL_SMART,
             api_key=SecretStr(settings.GROQ_API_KEY),
-            temperature=temperature
+            temperature=temperature,
+            max_retries=3,
         )
-        return base_llm.with_retry(
-            stop_after_attempt=3,
-            wait_exponential_jitter=True
-        )
+        return base_llm
 
     @staticmethod
     @lru_cache(maxsize=1)
@@ -59,12 +60,10 @@ class LLMFactory:
         base_llm = ChatGroq(
             model=settings.MODEL_FAST,
             api_key=SecretStr(settings.GROQ_API_KEY),
-            temperature=temperature
+            temperature=temperature,
+            max_retries=3,
         )
-        return base_llm.with_retry(
-            stop_after_attempt=3,
-            wait_exponential_jitter=True
-        )
+        return base_llm
 
     @staticmethod
     @lru_cache(maxsize=1)

@@ -15,7 +15,7 @@ def research_node(state: ResearchState):
     logger.info(f"Researching claim: {state.claim.statement[:50]}...")
     
     try:
-        llm = get_llm("local")
+        llm = get_llm("fast")
         structured_llm = llm.with_structured_output(ResearchQuery)
         
         messages = [

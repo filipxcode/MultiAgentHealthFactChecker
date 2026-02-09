@@ -21,7 +21,7 @@ def refiner_node(state: AgentState):
     claims_statements = [c.statement for c in state.raw_claims]
     claims_batches = cluster_claims(claims_statements)
 
-    llm = get_llm("local")
+    llm = get_llm("smart")
     structured_llm = llm.with_structured_output(UniqueClaimsList) # type: ignore
     all_unique_claims = []
     for i, batch in enumerate(claims_batches):

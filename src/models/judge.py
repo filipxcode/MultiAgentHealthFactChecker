@@ -7,7 +7,7 @@ class JudgeOutput(BaseModel):
     Structure for the LLM output (without the Claim object).
     """
     verdict: Literal["True", "False", "Unverified", "Nuanced"] = Field(
-        description="Categorical assessment: True (confirmed), False (debunked), Unverified (no enough evidence), Nuanced (partially true/context dependent)."
+        description="Categorical assessment: True (confirmed), False (refuted), Unverified (no enough evidence), Nuanced (partially true/context dependent)."
     )
     
     confidence_score: int = Field(
