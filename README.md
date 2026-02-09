@@ -37,7 +37,7 @@ The main graph (global state: `AgentState`) executes the following nodes:
 
 ### Workflow Visualization
 
-![Schema](assets/schema.png)
+![Schema](https://raw.githubusercontent.com/filipxcode/MultiAgentHealthFactChecker/main/assets/schema.png)
 
 ### Key Data Models
 
@@ -79,8 +79,7 @@ pip install semantic-router sentence-transformers scikit-learn numpy
 
 # (Optional) Evaluation
 pip install langsmith
-
-
+```
 
 > **Note:** If you encounter PyTorch issues during `sentence-transformers` installation, install the appropriate PyTorch version for your platform first from [pytorch.org](https://pytorch.org/).
 
@@ -88,7 +87,7 @@ pip install langsmith
 
 Create a `.env` file in the root directory:
 
-
+```bash
 # LLM (Groq)
 GROQ_API_KEY=your_groq_key_here
 
@@ -99,7 +98,7 @@ TAVILY_API_KEY=your_tavily_key_here
 LANGSMITH_API_KEY=your_langsmith_key
 LANGCHAIN_TRACING_V2=true
 LANGCHAIN_PROJECT=youtube-fact-checker
-
+```
 
 
 ## 💻 Usage
@@ -108,9 +107,9 @@ LANGCHAIN_PROJECT=youtube-fact-checker
 
 Start the backend server:
 
+```bash
 uvicorn src.api.app:app --host 0.0.0.0 --port 8000
-
-
+```
 
 * **Swagger UI**: `http://localhost:8000/docs`
 * **LangServe Endpoint**: `/agent`
@@ -119,10 +118,9 @@ uvicorn src.api.app:app --host 0.0.0.0 --port 8000
 
 Ensure the API is running in a separate terminal, then run:
 
-
+```bash
 streamlit run src/gui/gui.py
-
-
+```
 
 ### Data I/O
 
@@ -152,7 +150,7 @@ streamlit run src/gui/gui.py
 
 ## 📂 Project Structure
 
-
+```
 src/
 ├── api/          # FastAPI + LangServe logic
 ├── graph/        # LangGraph definitions
@@ -163,13 +161,9 @@ src/
 └── gui/          # Streamlit user interface
 files/            # Local cache for transcriptions
 tests/            # Evaluation scripts
-
+```
 
 
 ## ⚠️ License
 
 No license file included. Default copyright laws apply. Please add a `LICENSE` file for public distribution.
-
-```
-
-```
