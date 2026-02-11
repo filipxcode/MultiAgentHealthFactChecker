@@ -162,6 +162,4 @@ tests/            # Evaluation scripts
 ```
 
 
-## ⚠️ License
 
-No license file included. Default copyright laws apply. Please add a `LICENSE` file for public distribution.
