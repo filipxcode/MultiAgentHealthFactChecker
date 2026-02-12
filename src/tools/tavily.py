@@ -13,7 +13,7 @@ def research_tavily(claim: str):
     tavily = TavilyClient(api_key=settings.TAVILY_API_KEY)
     try:
         results = []
-        response = tavily.search(query=claim, search_depth="basic")
+        response = tavily.search(query=claim, search_depth="basic", include_domains=settings.TRUSTED_MEDICAL_DOMAINS, max_results=5)
         for result in response['results']:
             results.append(ScientificPaper(content=result['content'], url=result['url']))
         return results

@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 #Router settings
 medical_route = Route(
     name="medical",
-    score_threshold=0.4,
+    score_threshold=0.3,
     utterances=[
         # --- 1. Diseases  ---
         "how to cure flu and cold naturally",

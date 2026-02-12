@@ -33,6 +33,18 @@ class Settings(BaseSettings):
         env_file=".env", 
         extra="ignore" 
     )
+    TRUSTED_MEDICAL_DOMAINS: list[str] = [
+    "who.int",          
+    "cdc.gov",         
+    "mayoclinic.org",     
+    "medlineplus.gov",    
+    "hopkinsmedicine.org",
+    "sciencedaily.com",
+    "nature.com",
+    "scientificamerican.com",
+    "healthline.com",     
+    "webmd.com"           
+    ]
         
 @lru_cache()
 def get_settings() -> Settings:

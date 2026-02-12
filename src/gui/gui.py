@@ -20,6 +20,9 @@ if st.button("Start Analizy"):
             
             
             for node_name, state_update in chunk.items():
+                if state_update is None:
+                    st.error(f"Error: Received None for node {node_name}")
+                    break
                 if state_update.get("error"):
                     final_error = state_update["error"]
                     break
