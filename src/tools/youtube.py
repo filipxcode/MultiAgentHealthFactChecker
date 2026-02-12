@@ -60,7 +60,7 @@ def _load_from_cache(video_url: str) -> list[Document] | None:
     retry=retry_if_exception_type(Exception), 
     reraise=True
 )
-def youtube_transcribe(video_url: str, web_proxy: bool = False, save_transcript: bool = True, cached: bool = False) -> list[Document]:
+def youtube_transcribe(video_url: str, web_proxy: bool = False, save_transcript: bool = False, cached: bool = False) -> list[Document]:
     """
     Custom implementation of yt transcription, avoiding YT IP ban.
     """
