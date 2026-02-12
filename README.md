@@ -161,30 +161,36 @@ files/            # Local cache for transcriptions
 tests/            # Evaluation scripts
 ```
 
-##🧪 Tested Scenarios & Coverage
-The evaluation dataset covers the following critical scenarios:
+## 🧪 Evaluation & Reliability
 
-Scientific Content: Validating accuracy of medical fact extraction.
+To ensure robustness, the system undergoes rigorous testing using a custom evaluation pipeline in **LangSmith**. The dataset covers critical edge cases to validate the agentic workflow.
 
-Myth videos: The system should extract and check myths, but it doesn't understand the context.
+### 🎯 Tested Scenarios
+The evaluation dataset targets the following scenarios:
 
-Mixed/Wellness Content: Handling nuanced claims where some facts are true  and others are unproven.
+* **🧬 Scientific Content:** Validating the accuracy of medical fact extraction from dense lectures (e.g., Huberman Lab).
+* **myth-busting Context:** System should catch fake statements, but it wont understand the context
+* **⚖️ Mixed/Wellness Content:** Handling nuanced videos where established biochemistry (True) mixes with unproven wellness claims (Unverified).
+* **🚫 Spam/Irrelevant Content:** Successfully rejecting gaming videos (e.g., *Minecraft Potion Tutorial*) via the **Semantic Router**.
+* **📏 Technical Constraints:** Verifying correct blocking behavior for videos exceeding token/length limits.
 
-Spam/Irrelevant Content: Successfully rejecting gaming videos (e.g., Minecraft Potion Tutorial) via Semantic Router.
+### 📊 Results & Performance
 
-Technical Constraints: Correctly blocking videos exceeding the token/length limit.
+> **Note:** The following metrics are based on an MVP validation set (n=6).
 
-##📊 Results & Performance
-Accuracy: The system achieved a 100% Logic Check Pass Rate (Gatekeeper correctly filtering content) and high accuracy on verified medical claims.
-The data set was very small so it is not accualy 100%, in some cases, the results will be different. This needs further tests, but stand for now as MVP.
+* **✅ Accuracy:** Achieved a **100% Logic Check Pass Rate** (Gatekeeper correctly filtering content) and high precision on verified medical claims within the test sample. *Further testing on a larger dataset is required for statistical significance.*
+* **⚡ Speed & Cost:** Leveraging **Groq (Llama 3.1 8B)** enables near-instant analysis. The cost for a full evaluation run (6 diverse videos) is approximately **$0.06**.
 
-Speed & Cost: Leveraging Groq (Llama 3.1 8B) enables near-instant analysis. The cost for a full evaluation run (6 diverse videos) is approximately $0.06.
+![Photo of eval](assets/Zrzut%20ekranu%202026-02-12%20131553.png)
 
-##Known Limitations (MVP):
+### ⚠️ Known Limitations (MVP)
+* **Unverified vs. Nuanced:** Currently, the system defaults to a safe "Unverified" verdict when evidence is scarce. Future updates will distinguish between "lack of evidence" and "nuanced/conflicting evidence".
+* **Depth vs. Speed:** The system prioritizes speed and low cost. Complex medical ambiguity sometimes requires a **"Deep Dive Mode"** (planned feature using larger models like Llama 3.3 70B).
+* **Medical Data Sensitivity:** Due to the critical nature of medical data, the current version is an MVP. Production use would require extensive validation against a larger, medically annotated dataset.
 
-Unverified vs. Nuanced: Currently, the system prefers a safe "Unverified" verdict when evidence is scarce, whereas a human might label it "Nuanced". Future updates will refine this distinction.
 
-Depth: As an MVP, the system prioritizes speed. Complex medical ambiguity sometimes requires a "Deep Dive" mode (planned feature).
+###Walkthrough
+![Walkthrough](assets/multiagentvideo.gif)
 
-More evaluation needs to be done, especially because of medical data
+
 
