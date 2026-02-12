@@ -43,7 +43,6 @@ def evaluate_report_quality(run: Run, example: Example) -> EvaluationResult:
     def normalize_get(d, keys):
         for k in keys:
             if k in d: return d[k]
-        # Spróbuj lowercase
         d_lower = {k.lower(): v for k, v in d.items()}
         for k in keys:
             if k.lower() in d_lower: return d_lower[k.lower()]
