@@ -1,13 +1,13 @@
 import streamlit as st
 from langserve import RemoteRunnable
 
-"""Simple GUI for api"""
+"""WARNING THIS IS AI - ALWAYS VERIFY YOUR QUESTIONS"""
 agent = RemoteRunnable("http://localhost:8000/agent")
 
 st.title("Medical Fact-Checker Agentic System")
-video_url = st.text_input("Wklej link do YouTube:")
+video_url = st.text_input("Input YouTube link:")
 
-if st.button("Start Analizy"):
+if st.button("Start Analyst"):
     status_box = st.empty() 
     results_container = st.container() 
     
@@ -15,11 +15,13 @@ if st.button("Start Analizy"):
     
     try:
         current_step = "Start"
-        
+        final_error = None
         for chunk in agent.stream(input_data, config={"metadata": {"conversation_id": "123"}}):
             
             
             for node_name, state_update in chunk.items():
+                if node_name == "subgraph" and state_update is None:
+                    continue
                 if state_update is None:
                     st.error(f"Error: Received None for node {node_name}")
                     break
@@ -50,7 +52,7 @@ if st.button("Start Analizy"):
         if final_error:
             st.error("Error in processing {final_error}")
         else:
-            st.success("Gotowe!")
+            st.success("READY!")
 
     except Exception as e:
         st.error(f"Communication error: {e}")

@@ -19,7 +19,7 @@ def reporter_node(state: AgentState):
     for i, v in enumerate(verdicts):
         icon = "✅" if v.verdict.lower() == "true" else "❌"
         report += f"### {i+1}. {icon} Verdict: {v.verdict}\n"
-        report += f"**Claim:** {v.claim.statement}\n"
+        report += f"## **Claim:** {v.claim.statement}\n\n"
         report += f"**Explanation:** {v.explanation}\n"
         if v.sources:
             report += "**Sources:**\n"
