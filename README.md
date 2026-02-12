@@ -141,7 +141,7 @@ streamlit run src/gui/gui.py
 ### Verification Strategy
 
 1. **PUBMED**: Uses Tavily restricted to `pubmed.ncbi.nlm.nih.gov` and `ncbi.nlm.nih.gov`.
-2. **TAVILY**: Uses general web search.
+2. **TAVILY**: Uses general web search with whitelisted medical domains.
 3. **Fallback**: If PubMed search returns zero results, the system automatically triggers a general Tavily search to ensure coverage.
 
 ---
@@ -161,5 +161,30 @@ files/            # Local cache for transcriptions
 tests/            # Evaluation scripts
 ```
 
+##🧪 Tested Scenarios & Coverage
+The evaluation dataset covers the following critical scenarios:
 
+Scientific Content: Validating accuracy of medical fact extraction.
+
+Myth videos: The system should extract and check myths, but it doesn't understand the context.
+
+Mixed/Wellness Content: Handling nuanced claims where some facts are true  and others are unproven.
+
+Spam/Irrelevant Content: Successfully rejecting gaming videos (e.g., Minecraft Potion Tutorial) via Semantic Router.
+
+Technical Constraints: Correctly blocking videos exceeding the token/length limit.
+
+##📊 Results & Performance
+Accuracy: The system achieved a 100% Logic Check Pass Rate (Gatekeeper correctly filtering content) and high accuracy on verified medical claims.
+The data set was very small so it is not accualy 100%, in some cases, the results will be different. This needs further tests, but stand for now as MVP.
+
+Speed & Cost: Leveraging Groq (Llama 3.1 8B) enables near-instant analysis. The cost for a full evaluation run (6 diverse videos) is approximately $0.06.
+
+##Known Limitations (MVP):
+
+Unverified vs. Nuanced: Currently, the system prefers a safe "Unverified" verdict when evidence is scarce, whereas a human might label it "Nuanced". Future updates will refine this distinction.
+
+Depth: As an MVP, the system prioritizes speed. Complex medical ambiguity sometimes requires a "Deep Dive" mode (planned feature).
+
+More evaluation needs to be done, especially because of medical data
 
