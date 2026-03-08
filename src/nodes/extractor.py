@@ -1,13 +1,14 @@
 from langchain_core.messages import SystemMessage, HumanMessage
 
 from ..models.extractor import ExtractorInput, ExtractorResult
+from ..models.agent_state import AgentStateUpdate
 from ..settings.config import get_llm
 from ..prompts.prompts import PromptsOrganizer
 import logging
 
 logger = logging.getLogger(__name__)
 
-def extractor_node(state: ExtractorInput):
+def extractor_node(state: ExtractorInput | dict[str, str]) -> AgentStateUpdate:
     """Extractor agent node, handling single chunk"""
     if isinstance(state, dict):
         chunk = state.get("current_chunk_text", "")

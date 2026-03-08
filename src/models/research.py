@@ -1,4 +1,5 @@
 from pydantic import Field, BaseModel
+from typing import TypedDict
 from ..models.judge import VerificationResult
 from ..models.deduplicated_claims import UniqueClaim
 
@@ -19,10 +20,16 @@ class ScientificPaper(BaseModel):
     url: str | None
     
 
-class ResearchState(BaseModel):
+class ResearchState(TypedDict, total=False):
     """Single research state for each subgraph"""
     claim: UniqueClaim
 
-    found_papers: list[ScientificPaper] = Field(default_factory=list)
-    
-    final_verdicts: list[VerificationResult] = Field(default_factory=list)
+    found_papers: list[ScientificPaper]
+    final_verdicts: list[VerificationResult]
+
+
+class ResearchStateUpdate(TypedDict, total=False):
+    """Partial research state update returned by subgraph nodes."""
+
+    found_papers: list[ScientificPaper]
+    final_verdicts: list[VerificationResult]

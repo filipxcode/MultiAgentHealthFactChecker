@@ -1,13 +1,13 @@
-from ..models.agent_state import AgentState
+from ..models.agent_state import AgentState, AgentStateUpdate
 import logging
 
 logger = logging.getLogger(__name__)
 
-def reporter_node(state: AgentState):
+def reporter_node(state: AgentState) -> AgentStateUpdate:
     """
     Taking all sub-state judge summarization and concating it in one big report
     """
-    verdicts = [res for res in state.final_verdicts if res is not None]
+    verdicts = [res for res in state.get("final_verdicts", []) if res is not None]
     logger.info(f"Generating final report based on {len(verdicts)} verdicts")
     
     report = "# Fact-Check Report\n\n"

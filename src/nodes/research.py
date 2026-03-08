@@ -1,5 +1,7 @@
 from langchain_core.messages import HumanMessage, SystemMessage
 from ..models.research import ResearchQuery, ResearchState
+from typing import Literal
+from ..models.research import ResearchStateUpdate
 from ..settings.config import get_llm
 from ..prompts.prompts import PromptsOrganizer
 from ..tools.pubmed import research_pubmed
@@ -8,11 +10,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def research_node(state: ResearchState):
+def research_node(state: ResearchState) -> ResearchStateUpdate:
     """
     Research node handling single distributed claim with Auto-Fallback.
     """
-    logger.info(f"Researching claim: {state.claim.statement[:50]}...")
+    claim = state["claim"]
+    logger.info(f"Researching claim: {claim.statement[:50]}...")
     
     try:
         llm = get_llm("fast")
@@ -20,12 +23,12 @@ def research_node(state: ResearchState):
         
         messages = [
             SystemMessage(content=PromptsOrganizer.RESEARCH_SYSTEM),
-            HumanMessage(content=PromptsOrganizer.research_user(state.claim.statement))
+            HumanMessage(content=PromptsOrganizer.research_user(claim.statement))
         ]
         
         search_query_obj = structured_llm.invoke(messages)
         query = search_query_obj.search_query #type:ignore
-        tool = state.claim.verification_tool
+        tool = claim.verification_tool
         
         papers = []
 
@@ -53,10 +56,11 @@ def research_node(state: ResearchState):
         logger.error(f"🔥 Error in research_node: {e}")
         return {"found_papers": []}
 
-def route_research_output(state: ResearchState):
+def route_research_output(state: ResearchState) -> Literal["continue", "stop"]:
     """
     Router for research, if papers not found, stop.
     """
-    if state.found_papers and len(state.found_papers) > 0:
+    papers = state.get("found_papers", [])
+    if papers and len(papers) > 0:
         return "continue"
     return "stop"

@@ -1,6 +1,6 @@
 from langchain_core.messages import SystemMessage, HumanMessage
 
-from ..models.agent_state import AgentState
+from ..models.agent_state import AgentState, AgentStateUpdate
 from ..models.deduplicated_claims import UniqueClaimsList
 from ..settings.config import get_llm
 from ..prompts.prompts import PromptsOrganizer
@@ -9,16 +9,17 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def refiner_node(state: AgentState):
+def refiner_node(state: AgentState) -> AgentStateUpdate:
     """Refiner agent node, reducing raw claims to unique set, and giving a API flag for future tool usage"""
-    
-    logger.info(f"Deduplicator received {len(state.raw_claims)} raw claims")
-    
-    if not state.raw_claims:
+
+    raw_claims = state.get("raw_claims", [])
+    logger.info(f"Deduplicator received {len(raw_claims)} raw claims")
+
+    if not raw_claims:
         logger.warning("Refiner received empty list of claims. Skipping.")
         return {"unique_claims": []}
-    
-    claims_statements = [c.statement for c in state.raw_claims]
+
+    claims_statements = [c.statement for c in raw_claims]
     claims_batches = cluster_claims(claims_statements)
 
     llm = get_llm("smart")

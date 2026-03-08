@@ -70,7 +70,7 @@ class Workflow:
     
     def _distribute_chunks(self, state):
         """Distributing chunks for each extract agent"""
-        chunks = state.transcript_chunks or []
+        chunks = state.get("transcript_chunks", []) or []
         return [
             Send("extractor", {"current_chunk_text": chunk}) 
             for chunk in chunks
@@ -78,7 +78,7 @@ class Workflow:
     
     def _distribute_research(self, state):
         """Distributing filtered claims to research agents"""
-        deduplicated_claims = state.unique_claims
+        deduplicated_claims = state.get("unique_claims", [])
         return [
             Send("subgraph", {"claim": claim}) 
             for claim in deduplicated_claims
@@ -86,7 +86,7 @@ class Workflow:
     
     def _route_gatekeeper(self, state):
         """Guardial for checking if the input match is correct"""
-        verdict = state.gatekeeper_verdict
+        verdict = state.get("gatekeeper_verdict", "unknown")
         if verdict == "pass":
             return self._distribute_chunks(state)
         else:
@@ -94,7 +94,7 @@ class Workflow:
 
     def _route_ingest_fallback(self, state):
         """Error handler after ingest node, returns END if error occures"""
-        errors = state.errors
+        errors = state.get("errors")
         if errors:
             return END
         else:
@@ -103,6 +103,6 @@ class Workflow:
     def run(self, video_url: str):
         """Program run func"""
         logger.info(f"Starting workflow run for url: {video_url}")
-        initial_state = AgentState(video_url=video_url)
+        initial_state: AgentState = {"video_url": video_url}
         final_state = self.main_graph.invoke(initial_state)
         return final_state

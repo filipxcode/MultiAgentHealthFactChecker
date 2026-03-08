@@ -1,27 +1,33 @@
 import operator
-from typing import Annotated, List, Optional
-from pydantic import BaseModel, Field
+from typing import Annotated, TypedDict
 
 from .claim import Claim  #
 from .judge import VerificationResult
 from .deduplicated_claims import UniqueClaim
-class AgentState(BaseModel):
+
+
+class AgentState(TypedDict, total=False):
     """
     Global state handler
     """
-    
-    video_url: str = Field(description="YouTube video link (from user)")
-    
-    transcript_chunks: list[str] | None = Field(default=None) 
-    
-    raw_claims: Annotated[list[Claim], operator.add] = Field(default_factory=list)
-    
-    unique_claims: list[UniqueClaim] = Field(default_factory=list)
-    
-    gatekeeper_verdict: str = "unknown"
-    
-    final_verdicts: Annotated[list[VerificationResult], operator.add] = Field(default_factory=list)
 
-    final_report: str = Field(default="")
-    
-    errors: str | None = Field(default=None) 
+    video_url: str
+    transcript_chunks: list[str] | None
+    raw_claims: Annotated[list[Claim], operator.add]
+    unique_claims: list[UniqueClaim]
+    gatekeeper_verdict: str
+    final_verdicts: Annotated[list[VerificationResult], operator.add]
+    final_report: str
+    errors: str | None
+
+
+class AgentStateUpdate(TypedDict, total=False):
+    """Partial state update returned by nodes."""
+
+    transcript_chunks: list[str] | None
+    raw_claims: Annotated[list[Claim], operator.add]
+    unique_claims: list[UniqueClaim]
+    gatekeeper_verdict: str
+    final_verdicts: Annotated[list[VerificationResult], operator.add]
+    final_report: str
+    errors: str | None

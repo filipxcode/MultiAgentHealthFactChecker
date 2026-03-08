@@ -1,4 +1,5 @@
 from semantic_router import Route
+from ..models.agent_state import AgentState, AgentStateUpdate
 from ..settings.config import LLMFactory, get_settings
 import logging 
 
@@ -89,7 +90,7 @@ from functools import lru_cache
 def get_cached_router():
     return LLMFactory.get_semantic_router(routes=[medical_route])
 
-def gatekeeper_node(state):
+def gatekeeper_node(state: AgentState) -> AgentStateUpdate:
     """Node handling state after ingesting. Handling whole text lookup and looking for semantic match to the medical topic"""
     if isinstance(state, dict):
         list_transcripted_chunks = state.get("transcript_chunks", [])
